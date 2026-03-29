@@ -1,0 +1,150 @@
+PROJECT SUBMISSION: GCP VM Auto Scaling Setup using Ubuntu (GCP & VirtualBox)
+
+----------------------------------------
+RESPECTED PROFESSOR,
+----------------------------------------
+I have completed the assignment on setting up a scalable web application environment using Ubuntu on both Google Cloud Platform (GCP) and VirtualBox. Below, I have documented the complete procedure, including all commands and configurations used during the implementation.
+
+----------------------------------------
+PROJECT OVERVIEW
+----------------------------------------
+The objective of this project is to:
+- Create and configure a Virtual Machine (VM) using Ubuntu
+- Install necessary dependencies such as Python and pip
+- Develop and deploy a basic Flask web application
+- Configure firewall rules to allow external access
+- Understand the basic concept of auto scaling in GCP
+
+----------------------------------------
+ENVIRONMENT DETAILS
+----------------------------------------
+Operating System: Ubuntu (used in both GCP VM and VirtualBox)
+Platform: Google Cloud Platform (Compute Engine) and VirtualBox
+
+----------------------------------------
+STEP 1: CONNECT TO VM (GCP)
+----------------------------------------
+Command used:
+
+gcloud compute ssh <INSTANCE_NAME>
+
+----------------------------------------
+STEP 2: UPDATE SYSTEM AND INSTALL PYTHON & PIP
+----------------------------------------
+Commands used:
+
+sudo apt update
+sudo apt upgrade -y
+
+python3 --version
+
+sudo apt install python3-pip -y
+
+pip3 --version
+
+----------------------------------------
+STEP 3: INSTALL REQUIRED LIBRARIES
+----------------------------------------
+Commands used:
+
+pip3 install flask
+pip3 install gunicorn
+
+----------------------------------------
+STEP 4: CREATE APPLICATION FILE
+----------------------------------------
+Command used:
+
+nano app.py
+
+Code written in app.py:
+
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, GCP Auto Scaling using Ubuntu!"
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=80)
+
+Save and exit:
+CTRL + X
+Press Y
+Press ENTER
+
+----------------------------------------
+STEP 5: RUN THE APPLICATION
+----------------------------------------
+Command used:
+
+sudo python3 app.py
+
+Access in browser:
+
+http://<EXTERNAL_IP>
+
+----------------------------------------
+STEP 6: CONFIGURE FIREWALL (GCP)
+----------------------------------------
+Command used:
+
+gcloud compute firewall-rules create allow-http \
+--allow tcp:80 \
+--source-ranges 0.0.0.0/0 \
+--target-tags http-server
+
+----------------------------------------
+STEP 7: RUN APPLICATION IN BACKGROUND
+----------------------------------------
+Commands used:
+
+sudo apt install screen
+
+screen -S app
+
+sudo python3 app.py
+
+Detach screen session:
+CTRL + A + D
+
+----------------------------------------
+STEP 8: AUTO SCALING SETUP (BASIC)
+----------------------------------------
+Commands used:
+
+gcloud compute instance-templates create my-template \
+--machine-type=e2-medium \
+--image-family=ubuntu-2004-lts \
+--image-project=ubuntu-os-cloud
+
+gcloud compute instance-groups managed create my-group \
+--base-instance-name=my-instance \
+--template=my-template \
+--size=2 \
+--zone=us-central1-a
+
+gcloud compute instance-groups managed set-autoscaling my-group \
+--max-num-replicas=5 \
+--target-cpu-utilization=0.6 \
+--zone=us-central1-a
+
+----------------------------------------
+OBSERVATIONS
+----------------------------------------
+- Ubuntu provided a stable environment for both local (VirtualBox) and cloud (GCP) setup
+- Firewall configuration was essential to access the application externally
+- Background execution ensured continuous availability of the application
+
+----------------------------------------
+CONCLUSION
+----------------------------------------
+Through this assignment, I gained practical understanding of deploying applications on Ubuntu-based virtual machines and learned the foundational steps involved in configuring auto scaling in GCP.
+
+Thank you for reviewing my submission.
+
+----------------------------------------
+END OF DOCUMENT
+----------------------------------------
